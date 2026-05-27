@@ -1,0 +1,45 @@
+{
+  "name": "raspapi",
+  "version": "1.0.0",
+  "description": "\"This is an api of a dynamic movie server with the ability to find, upload, update and sort them smartly. However, things are being done to participate the RaspAPI programme by HackClub.\"",
+  "keywords": [
+    "API",
+    "\"Movie",
+    "Server",
+    "Api\""
+  ],
+  "homepage": "https://github.com/afaeid/RaspApi#readme",
+  "bugs": {
+    "url": "https://github.com/afaeid/RaspApi/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afaeid/RaspApi.git"
+  },
+  "license": "ISC",
+  "author": "afaeid",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js --dev",
+    "start_prod": "nodemon server.js --prod"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.2",
+    "nodemailer": "^8.0.9",
+    "validator": "^13.15.35",
+    "xss-clean": "^0.1.4"
+  }
+}
