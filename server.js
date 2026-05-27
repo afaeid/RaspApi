@@ -15,9 +15,29 @@ mongoose.connect(process.env.DB === "cloud" ? process.env.REMOTE_DB_CON_STR : pr
 
 process.on("uncaughtException", (err) => {
 
- console.log(err.name, err.message)
+ console.log(err.name, err.message,err)
  console.log("Uncaught Exception occured. Shutting down...")
 
  process.exit(1)
+
+})
+
+const app = require("./app")
+//const app = require("./testApp.js")
+
+
+const server = app.listen("7000", () => {
+ console.log("Server is running at 7000 port")
+})
+
+
+process.on("unhandledRejection", (err) => {
+
+ console.log(err.name, err.message)
+ console.log("Unhandled rejection occured. Shutting down...")
+
+ server.close(() => {
+  process.exit(1)
+ })
 
 })
