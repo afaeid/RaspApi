@@ -69,7 +69,7 @@ exports.protect = asyncErrorHandler(async (req, res, next) => {
 
  const testToken = req.headers.authorization
  let token;
- console.log(testToken)
+// console.log(testToken)
  if (testToken && testToken.startsWith("Bearer")) {
   token = testToken.split(" ")[1]
  }
