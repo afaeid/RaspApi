@@ -26,8 +26,8 @@ const app = require("./app")
 //const app = require("./testApp.js")
 
 
-const server = app.listen("7000", () => {
- console.log("Server is running at 7000 port")
+const server = app.listen("7080", () => {
+ console.log("Server is running at 7080 port")
 })
 
 

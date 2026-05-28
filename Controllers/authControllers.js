@@ -124,7 +124,7 @@ exports.forgotPassword = asyncErrorHandler(async (req, res, next) => {
 
  await user.save({ validateBeforeSave: false })
 
- const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/user/resetPassword/${token}`
+ const resetUrl = `${req.protocol}://${req.get("host")}/api/v1/auth/resetPassword/${token}`
  const message = `We have received your password reset request. Please click the below url to reset your password:\n\n${resetUrl}\n\n This url will be validated only for 10 minutes. \n Don't share it publicly.`
  try {
   await sendEmail({
@@ -135,6 +135,9 @@ exports.forgotPassword = asyncErrorHandler(async (req, res, next) => {
 
   res.status(200).json({
    status: "success",
+   email: user.email,
+   token: token,
+   resetEndPoint: resetUrl,
    message: "Password reset token has been sent to the email."
   })
 

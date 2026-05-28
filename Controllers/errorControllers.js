@@ -9,6 +9,8 @@ const devErrors = (res, err) => {
   error: err
  })
 
+ console.log(err)
+
 }
 
 const castErrorHandler = (err) => {

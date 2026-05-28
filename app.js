@@ -34,7 +34,7 @@ app.use("/api/v1/auth", authRouter)
 
 
 
-app.all("*splat", (req, res, next) => {
+app.all("*", (req, res, next) => {
 
  const err = new CustomError(`The page ${req.originalUrl} is not found in the server`, 404)
 
