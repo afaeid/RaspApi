@@ -82,9 +82,13 @@ exports.updateMe = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.deleteMe = asyncErrorHandler(async (req, res, next)=>{
- await User.findByIdAndUpdate(req.user._id, {active: false}, {runValidators: false, new: true})
- res.status(204).json({
+ const deletedUser = await User.findByIdAndUpdate(req.user._id, {active: false}, {runValidators: false, new: true})
+ res.status(200).json({
   status: "success",
-  data: null
+  message: "Your account has been deleted.",
+  deletedUser: {
+   name: deletedUser.name,
+   email: deletedUser.email
+  }
  })
 })
