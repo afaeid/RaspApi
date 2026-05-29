@@ -26,7 +26,7 @@ const app = require("./app")
 //const app = require("./testApp.js")
 
 
-const server = app.listen("7080", () => {
+const server = app.listen("7080","0.0.0.0",() => {
  console.log("Server is running at 7080 port")
 })
 
