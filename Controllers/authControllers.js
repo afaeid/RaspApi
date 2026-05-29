@@ -66,13 +66,15 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.protect = asyncErrorHandler(async (req, res, next) => {
-
+  console.log("AUTH HEADER:", req.headers.authorization);
+  console.log("SECRET EXISTS:", !!process.env.SECRET_STR);
  const testToken = req.headers.authorization
  let token;
 // console.log(testToken)
  if (testToken && testToken.startsWith("Bearer")) {
   token = testToken.split(" ")[1]
  }
+ console.log("TOKEN:", token);
 
  if (!testToken) {
   next(new CustomError("Not authorized. Please login again.", 401))
