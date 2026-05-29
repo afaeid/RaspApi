@@ -81,9 +81,9 @@ exports.protect = asyncErrorHandler(async (req, res, next) => {
  }
 
  const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_STR)
-
+ console.log("DECODED TOKEN:", decodedToken);
  const user = await User.findById(decodedToken.id).select("+passwordChangedAt")
-
+ console.log("USER FOUND:", user);
  if (!user) {
   next(new CustomError("User with the given token doesn't exist. Please sign up."))
  }
