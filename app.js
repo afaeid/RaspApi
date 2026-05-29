@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+app.set("trust proxy", 1);
+
 const morgan = require("morgan");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
