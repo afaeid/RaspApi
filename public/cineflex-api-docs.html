@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cineflex API Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: #2a2a35;
+      --accent: #e8c97e;
+      --accent2: #c46b3a;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --get: #4caf8c;
+      --post: #5b8cdf;
+      --patch: #d4a03a;
+      --delete: #d45a5a;
+      --radius: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      width: 260px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-logo .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 3px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .sidebar-section {
+      padding: 20px 16px 8px;
+    }
+
+    .sidebar-section-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 8px;
+      padding: 0 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.18s;
+      text-decoration: none;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .nav-item .method-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .badge-get    { background: rgba(76,175,140,0.15); color: var(--get); }
+    .badge-post   { background: rgba(91,140,223,0.15); color: var(--post); }
+    .badge-patch  { background: rgba(212,160,58,0.15); color: var(--patch); }
+    .badge-delete { background: rgba(212,90,90,0.15);  color: var(--delete); }
+
+    /* ─── Main ─── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 48px 56px;
+      max-width: 860px;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      margin-bottom: 56px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 52px;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .hero-meta-item span {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .dot { color: var(--accent); font-size: 16px; }
+
+    /* ─── Base URL Box ─── */
+    .base-url-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .base-url-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .base-url-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    /* ─── Auth Banner ─── */
+    .auth-banner {
+      background: linear-gradient(135deg, rgba(232,201,126,0.06), rgba(196,107,58,0.06));
+      border: 1px solid rgba(232,201,126,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 48px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    .auth-banner strong { color: var(--accent); }
+
+    .auth-banner code {
+      font-family: 'DM Mono', monospace;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* ─── Section ─── */
+    .section {
+      margin-bottom: 64px;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .icon-movies  { background: rgba(232,201,126,0.1); }
+    .icon-auth    { background: rgba(91,140,223,0.1); }
+    .icon-user    { background: rgba(76,175,140,0.1); }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .section-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: auto;
+    }
+
+    /* ─── Endpoint Card ─── */
+    .endpoint {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .endpoint:hover {
+      border-color: rgba(232,201,126,0.25);
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .method-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .pill-get    { background: rgba(76,175,140,0.12);  color: var(--get);    border: 1px solid rgba(76,175,140,0.3); }
+    .pill-post   { background: rgba(91,140,223,0.12);  color: var(--post);   border: 1px solid rgba(91,140,223,0.3); }
+    .pill-patch  { background: rgba(212,160,58,0.12);  color: var(--patch);  border: 1px solid rgba(212,160,58,0.3); }
+    .pill-delete { background: rgba(212,90,90,0.12);   color: var(--delete); border: 1px solid rgba(212,90,90,0.3); }
+
+    .endpoint-name {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .endpoint-url-preview {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 340px;
+    }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform 0.25s;
+      flex-shrink: 0;
+    }
+
+    .endpoint.open .chevron { transform: rotate(180deg); }
+
+    .endpoint-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .endpoint.open .endpoint-body { display: block; }
+
+    /* ─── Fields ─── */
+    .field-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 18px 0 10px;
+    }
+
+    .url-block {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px 16px;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    /* Auth required tag */
+    .auth-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      background: rgba(232,201,126,0.08);
+      border: 1px solid rgba(232,201,126,0.2);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 14px;
+    }
+
+    /* Params Table */
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .params-table th {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 8px 12px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .params-table th:first-child { border-radius: 6px 0 0 0; }
+    .params-table th:last-child  { border-radius: 0 6px 0 0; }
+
+    .params-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(42,42,53,0.5);
+      vertical-align: top;
+    }
+
+    .params-table tr:last-child td { border-bottom: none; }
+
+    .param-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--post);
+    }
+
+    .param-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* Code block */
+    pre {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    pre .key   { color: #7ec8c8; }
+    pre .str   { color: #c8e6a0; }
+    pre .num   { color: #ffb86c; }
+    pre .bool  { color: #ff79c6; }
+
+    /* ─── Animations ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 28px 20px; }
+      .hero h1 { font-size: 36px; }
+      .endpoint-url-preview { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Sidebar ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Cineflex</div>
+    <div class="logo-sub">API Reference v1</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Movies</div>
+    <a class="nav-item" href="#get-all-movies"><span class="method-badge badge-get">GET</span> Get All Movies</a>
+    <a class="nav-item" href="#get-by-id"><span class="method-badge badge-get">GET</span> Get by ID</a>
+    <a class="nav-item" href="#get-by-search"><span class="method-badge badge-get">GET</span> Get By Search</a>
+    <a class="nav-item" href="#get-by-sort"><span class="method-badge badge-get">GET</span> Get by Sort</a>
+    <a class="nav-item" href="#get-by-projection"><span class="method-badge badge-get">GET</span> Get by Projection</a>
+    <a class="nav-item" href="#get-paginated"><span class="method-badge badge-get">GET</span> Page &amp; Limit</a>
+    <a class="nav-item" href="#get-by-genre"><span class="method-badge badge-get">GET</span> Get by Genre</a>
+    <a class="nav-item" href="#create-movie"><span class="method-badge badge-post">POST</span> Create Movie</a>
+    <a class="nav-item" href="#update-movie"><span class="method-badge badge-patch">PATCH</span> Update Movie</a>
+    <a class="nav-item" href="#delete-movie"><span class="method-badge badge-delete">DELETE</span> Delete Movie</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Auth</div>
+    <a class="nav-item" href="#login"><span class="method-badge badge-post">POST</span> Login</a>
+    <a class="nav-item" href="#signup"><span class="method-badge badge-post">POST</span> Signup</a>
+    <a class="nav-item" href="#forgot-password"><span class="method-badge badge-post">POST</span> Forgot Password</a>
+    <a class="nav-item" href="#reset-password"><span class="method-badge badge-patch">PATCH</span> Reset Password</a>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">User</div>
+    <a class="nav-item" href="#delete-me"><span class="method-badge badge-delete">DELETE</span> Delete Me</a>
+    <a class="nav-item" href="#update-me"><span class="method-badge badge-patch">PATCH</span> Update Me</a>
+    <a class="nav-item" href="#update-password"><span class="method-badge badge-patch">PATCH</span> Update Password</a>
+  </div>
+</aside>
+
+<!-- ─── Main Content ─── -->
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">● API Reference</div>
+    <h1>Cineflex <em>REST API</em></h1>
+    <p class="hero-desc">Complete reference for the Cineflex backend API. Manage movies, handle authentication, and update user profiles — all over a clean RESTful interface.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="dot">●</span> Version <span>v1</span></div>
+      <div class="hero-meta-item"><span class="dot">●</span> Endpoints <span>17</span></div>
+      <div class="hero-meta-item"><span class="dot">●</span> Auth <span>JWT Bearer</span></div>
+    </div>
+  </div>
+
+  <!-- Base URL -->
+  <div class="base-url-box">
+    <div class="base-url-label">Base URL</div>
+    <div class="base-url-value">{protocol}://{host}/api/v1</div>
+  </div>
+
+  <!-- Auth Note -->
+  <div class="auth-banner">
+    <strong>🔐 Authentication</strong> — Most endpoints require a JWT bearer token. Include the header
+    <code>Authorization: Bearer &lt;token&gt;</code> in every protected request.
+    Obtain a token via the <strong>Login</strong> or <strong>Signup</strong> endpoints.
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- MOVIES SECTION                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="movies">
+    <div class="section-header">
+      <div class="section-icon icon-movies">🎬</div>
+      <div class="section-title">Movies</div>
+      <div class="section-count">10 endpoints</div>
+    </div>
+
+    <!-- Get All Movies -->
+    <div class="endpoint" id="get-all-movies">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get All Movies</div>
+        <div class="endpoint-url-preview">/api/v1/movies</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Description</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">Returns the complete list of all movies in the database. No query filters applied.</p>
+      </div>
+    </div>
+
+    <!-- Get by ID -->
+    <div class="endpoint" id="get-by-id">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movie by ID</div>
+        <div class="endpoint-url-preview">/api/v1/movies/:id</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies/<span style="color:var(--patch)">:movieId</span></div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Path Parameter</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">movieId</span></td>
+            <td><span class="param-value">6a17004dc40f0cf33615e1c6</span></td>
+            <td style="color:var(--muted);font-size:12px">MongoDB ObjectId of the movie</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Get By Search -->
+    <div class="endpoint" id="get-by-search">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movies by Search</div>
+        <div class="endpoint-url-preview">/api/v1/movies?name=...</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Query Parameters</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">name</span></td>
+            <td><span class="param-value">Lone Wolf</span></td>
+            <td style="color:var(--muted);font-size:12px">Filter movies by name</td>
+          </tr>
+          <tr>
+            <td><span class="param-key">price</span></td>
+            <td><span class="param-value">59</span></td>
+            <td style="color:var(--muted);font-size:12px">Filter movies by exact price</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Get by Sort -->
+    <div class="endpoint" id="get-by-sort">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movies by Sort</div>
+        <div class="endpoint-url-preview">/api/v1/movies?sort=...</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Query Parameters</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">sort</span></td>
+            <td><span class="param-value">-ratings,price</span></td>
+            <td style="color:var(--muted);font-size:12px">Comma-separated sort fields. Prefix with <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">-</code> for descending order.</td>
+          </tr>
+          <tr>
+            <td><span class="param-key">ratings[gte]</span></td>
+            <td><span class="param-value">9</span></td>
+            <td style="color:var(--muted);font-size:12px">Comparison filter. Supports <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">gte</code>, <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">lte</code>, <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">gt</code>, <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">lt</code></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Get by Projection -->
+    <div class="endpoint" id="get-by-projection">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movies by Projection</div>
+        <div class="endpoint-url-preview">/api/v1/movies?fields=...</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Query Parameters</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">fields</span></td>
+            <td><span class="param-value">name, duration</span></td>
+            <td style="color:var(--muted);font-size:12px">Comma-separated field names to include in response (projection)</td>
+          </tr>
+          <tr>
+            <td><span class="param-key">sort</span></td>
+            <td><span class="param-value">-ratings,price</span></td>
+            <td style="color:var(--muted);font-size:12px">Optional sort alongside projection</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Get by Page And Limit -->
+    <div class="endpoint" id="get-paginated">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movies — Page &amp; Limit</div>
+        <div class="endpoint-url-preview">/api/v1/movies?page=2&amp;limit=10</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Query Parameters</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">page</span></td>
+            <td><span class="param-value">2</span></td>
+            <td style="color:var(--muted);font-size:12px">Page number (1-based)</td>
+          </tr>
+          <tr>
+            <td><span class="param-key">limit</span></td>
+            <td><span class="param-value">10</span></td>
+            <td style="color:var(--muted);font-size:12px">Number of results per page</td>
+          </tr>
+          <tr>
+            <td><span class="param-key">fields</span></td>
+            <td><span class="param-value">ratings,duration,name,description</span></td>
+            <td style="color:var(--muted);font-size:12px">Optional field projection</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Get by Genre -->
+    <div class="endpoint" id="get-by-genre">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-get">GET</div>
+        <div class="endpoint-name">Get Movies by Genre</div>
+        <div class="endpoint-url-preview">/api/v1/movies/get-movies-by-genre/:genre</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies/get-movies-by-genre/<span style="color:var(--patch)">:genre</span></div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Path Parameter</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">genre</span></td>
+            <td><span class="param-value">Sci-Fi</span></td>
+            <td style="color:var(--muted);font-size:12px">Genre name (case-sensitive)</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create Movie -->
+    <div class="endpoint" id="create-movie">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-post">POST</div>
+        <div class="endpoint-name">Create Movie</div>
+        <div class="endpoint-url-preview">/api/v1/movies</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">name</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Movie title</td></tr>
+          <tr><td><span class="param-key">duration</span></td><td style="color:var(--muted);font-size:12px">number</td><td style="color:var(--muted);font-size:12px">Duration in minutes</td></tr>
+          <tr><td><span class="param-key">description</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Full movie synopsis</td></tr>
+          <tr><td><span class="param-key">ratings</span></td><td style="color:var(--muted);font-size:12px">number</td><td style="color:var(--muted);font-size:12px">Average rating (e.g. 3.3)</td></tr>
+          <tr><td><span class="param-key">totalRatings</span></td><td style="color:var(--muted);font-size:12px">number</td><td style="color:var(--muted);font-size:12px">Total number of ratings</td></tr>
+          <tr><td><span class="param-key">releaseYear</span></td><td style="color:var(--muted);font-size:12px">number</td><td style="color:var(--muted);font-size:12px">Year of release</td></tr>
+          <tr><td><span class="param-key">releaseDate</span></td><td style="color:var(--muted);font-size:12px">ISO 8601</td><td style="color:var(--muted);font-size:12px">Full release date</td></tr>
+          <tr><td><span class="param-key">genres</span></td><td style="color:var(--muted);font-size:12px">string[]</td><td style="color:var(--muted);font-size:12px">Array of genre strings</td></tr>
+          <tr><td><span class="param-key">directors</span></td><td style="color:var(--muted);font-size:12px">string[]</td><td style="color:var(--muted);font-size:12px">Array of director names</td></tr>
+          <tr><td><span class="param-key">coverImage</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Filename of cover image</td></tr>
+          <tr><td><span class="param-key">actors</span></td><td style="color:var(--muted);font-size:12px">string[]</td><td style="color:var(--muted);font-size:12px">Array of actor names</td></tr>
+          <tr><td><span class="param-key">price</span></td><td style="color:var(--muted);font-size:12px">number</td><td style="color:var(--muted);font-size:12px">Price of the movie</td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"Lone Wolf"</span>,
+  <span class="key">"duration"</span>: <span class="num">104</span>,
+  <span class="key">"ratings"</span>: <span class="num">3.3</span>,
+  <span class="key">"totalRatings"</span>: <span class="num">258</span>,
+  <span class="key">"releaseYear"</span>: <span class="num">2021</span>,
+  <span class="key">"releaseDate"</span>: <span class="str">"2021-02-02T00:00:00Z"</span>,
+  <span class="key">"genres"</span>: [<span class="str">"Drama"</span>],
+  <span class="key">"directors"</span>: [<span class="str">"Jonathan Ogilvie"</span>],
+  <span class="key">"coverImage"</span>: <span class="str">"lone_wolf.jpg"</span>,
+  <span class="key">"actors"</span>: [<span class="str">"Hugo Weaving"</span>, <span class="str">"Diana Glenn"</span>],
+  <span class="key">"price"</span>: <span class="num">59</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Update Movie -->
+    <div class="endpoint" id="update-movie">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-patch">PATCH</div>
+        <div class="endpoint-name">Update Movie</div>
+        <div class="endpoint-url-preview">/api/v1/movies/:id</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies/<span style="color:var(--patch)">:movieId</span></div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Path Parameter</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">movieId</span></td>
+            <td><span class="param-value">6a187b64a7e1ff46ab2faaf1</span></td>
+            <td style="color:var(--muted);font-size:12px">MongoDB ObjectId of the movie to update</td>
+          </tr>
+        </table>
+        <div class="field-label">Request Body — application/json</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px">Send only the fields you want to update. All movie fields are patchable.</p>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"Lone Wolf"</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Delete Movie -->
+    <div class="endpoint" id="delete-movie">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-delete">DELETE</div>
+        <div class="endpoint-name">Delete Movie</div>
+        <div class="endpoint-url-preview">/api/v1/movies/:id</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/movies/<span style="color:var(--patch)">:movieId</span></div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Path Parameter</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">movieId</span></td>
+            <td><span class="param-value">6a188d09af3e61e1040258a1</span></td>
+            <td style="color:var(--muted);font-size:12px">MongoDB ObjectId of the movie to delete</td>
+          </tr>
+        </table>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px">No request body needed. A successful delete typically returns <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">204 No Content</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- AUTH SECTION                                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="auth">
+    <div class="section-header">
+      <div class="section-icon icon-auth">🔐</div>
+      <div class="section-title">Authentication</div>
+      <div class="section-count">4 endpoints</div>
+    </div>
+
+    <!-- Login -->
+    <div class="endpoint" id="login">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-post">POST</div>
+        <div class="endpoint-name">Login</div>
+        <div class="endpoint-url-preview">/api/v1/auth/login</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/auth/login</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">email</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Registered user email address</td></tr>
+          <tr><td><span class="param-key">password</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Account password</td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"email"</span>: <span class="str">"user@example.com"</span>,
+  <span class="key">"password"</span>: <span class="str">"yourPassword"</span>
+}</pre>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px">On success, the response includes a JWT token to be used in subsequent authenticated requests.</p>
+      </div>
+    </div>
+
+    <!-- Signup -->
+    <div class="endpoint" id="signup">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-post">POST</div>
+        <div class="endpoint-name">Signup</div>
+        <div class="endpoint-url-preview">/api/v1/auth/signup</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/auth/signup/</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">name</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Full display name</td></tr>
+          <tr><td><span class="param-key">email</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Email address (must be unique)</td></tr>
+          <tr><td><span class="param-key">password</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Desired password</td></tr>
+          <tr><td><span class="param-key">confirmPassword</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Must match <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">password</code></td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"John Doe"</span>,
+  <span class="key">"email"</span>: <span class="str">"john@example.com"</span>,
+  <span class="key">"password"</span>: <span class="str">"Secure@123"</span>,
+  <span class="key">"confirmPassword"</span>: <span class="str">"Secure@123"</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- Forgot Password -->
+    <div class="endpoint" id="forgot-password">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-post">POST</div>
+        <div class="endpoint-name">Forgot Password</div>
+        <div class="endpoint-url-preview">/api/v1/auth/forgotPassword</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/auth/forgotPassword</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">email</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Email associated with the account</td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"email"</span>: <span class="str">"user@example.com"</span>
+}</pre>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px">Sends a password-reset link/token to the provided email address.</p>
+      </div>
+    </div>
+
+    <!-- Reset Password -->
+    <div class="endpoint" id="reset-password">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-patch">PATCH</div>
+        <div class="endpoint-name">Reset Password</div>
+        <div class="endpoint-url-preview">/api/v1/auth/resetPassword/:token</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/auth/resetPassword/<span style="color:var(--patch)">:resetToken</span></div>
+        <div class="field-label">Path Parameter</div>
+        <table class="params-table">
+          <tr><th>Parameter</th><th>Example</th><th>Description</th></tr>
+          <tr>
+            <td><span class="param-key">resetToken</span></td>
+            <td><span class="param-value">e12bdec632d40b5694c9c919</span></td>
+            <td style="color:var(--muted);font-size:12px">Token received via the forgot-password email</td>
+          </tr>
+        </table>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">password</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">New password</td></tr>
+          <tr><td><span class="param-key">confirmPassword</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Must match <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">password</code></td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"password"</span>: <span class="str">"NewSecure@456"</span>,
+  <span class="key">"confirmPassword"</span>: <span class="str">"NewSecure@456"</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- USER SECTION                                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="user">
+    <div class="section-header">
+      <div class="section-icon icon-user">👤</div>
+      <div class="section-title">User</div>
+      <div class="section-count">3 endpoints</div>
+    </div>
+
+    <!-- Delete Me -->
+    <div class="endpoint" id="delete-me">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-delete">DELETE</div>
+        <div class="endpoint-name">Delete Me</div>
+        <div class="endpoint-url-preview">/api/v1/user/deleteMe</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/user/deleteMe</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:14px">Deletes the currently authenticated user's account. No request body required. The user identity is determined from the JWT token.</p>
+      </div>
+    </div>
+
+    <!-- Update Me -->
+    <div class="endpoint" id="update-me">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-patch">PATCH</div>
+        <div class="endpoint-name">Update Me</div>
+        <div class="endpoint-url-preview">/api/v1/user/updateMe</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/user/updateMe</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">name</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">New display name</td></tr>
+          <tr><td><span class="param-key">email</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">New email address</td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"Azmir"</span>,
+  <span class="key">"email"</span>: <span class="str">"azmir@example.com"</span>
+}</pre>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px">Use this endpoint to update profile info only. To change the password, use <strong>Update Password</strong> instead.</p>
+      </div>
+    </div>
+
+    <!-- Update Password -->
+    <div class="endpoint" id="update-password">
+      <div class="endpoint-header" onclick="toggle(this)">
+        <div class="method-pill pill-patch">PATCH</div>
+        <div class="endpoint-name">Update Password</div>
+        <div class="endpoint-url-preview">/api/v1/user/updatePassword</div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="endpoint-body">
+        <div class="field-label">Full URL</div>
+        <div class="url-block">{protocol}://{host}/api/v1/user/updatePassword</div>
+        <div class="auth-tag">🔑 Requires Authorization</div>
+        <div class="field-label">Request Body — application/json</div>
+        <table class="params-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><span class="param-key">currentPassword</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">The user's existing password for verification</td></tr>
+          <tr><td><span class="param-key">password</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">The new desired password</td></tr>
+          <tr><td><span class="param-key">confirmPassword</span></td><td style="color:var(--muted);font-size:12px">string</td><td style="color:var(--muted);font-size:12px">Must match <code style="font-family:DM Mono,monospace;background:rgba(255,255,255,0.05);padding:1px 5px;border-radius:3px">password</code></td></tr>
+        </table>
+        <div class="field-label">Example Body</div>
+        <pre>{
+  <span class="key">"currentPassword"</span>: <span class="str">"OldPass@123"</span>,
+  <span class="key">"password"</span>: <span class="str">"NewPass@456"</span>,
+  <span class="key">"confirmPassword"</span>: <span class="str">"NewPass@456"</span>
+}</pre>
+      </div>
+    </div>
+
+  </div><!-- /section user -->
+
+</main>
+
+<script>
+  function toggle(header) {
+    const card = header.parentElement;
+    card.classList.toggle('open');
+  }
+
+  // Smooth scroll for sidebar links
+  document.querySelectorAll('.nav-item').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // open it
+        if (!target.classList.contains('open')) {
+          target.querySelector('.endpoint-header')?.click();
+        }
+        document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+</body>
+</html>

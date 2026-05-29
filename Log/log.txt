@@ -97,6 +97,7 @@ Query took 70 milliseconds to fetch the docs.
 A new movie is created with the name Lone Wolf by Afaeid 
 Query took 101 milliseconds to fetch the docs.
 A new movie is created with the name Lone Wolf by Afaeid 
+<<<<<<< HEAD
 Query took 10 milliseconds to fetch the docs.
 Query took 13 milliseconds to fetch the docs.
 Query took 21 milliseconds to fetch the docs.
@@ -104,3 +105,6 @@ A new movie is created with the name Lone Wolf by Afaeid
 Query took 13 milliseconds to fetch the docs.
 Query took 18 milliseconds to fetch the docs.
 Query took 6 milliseconds to fetch the docs.
+=======
+Query took 102 milliseconds to fetch the docs.
+>>>>>>> 92a63be (added docs for api)
