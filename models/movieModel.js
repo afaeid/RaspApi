@@ -97,7 +97,7 @@ movieSchema.pre("save", function(next) {
 movieSchema.post("save", (doc, next) => {
  const content = `A new movie is created with the name ${doc.name} by ${doc.createdBy} \n`
  if (process.env.NODE_ENV === "development") {
-    fs.writeFileSync('./Log/log.txt');
+    fs.writeFileSync('./Log/log.txt', content);
   }
  next()
 })
@@ -114,7 +114,7 @@ movieSchema.post(/^find/, function(docs, next) {
 
  const content = `Query took ${this.endTime - this.startTime} milliseconds to fetch the docs.\n`
  if (process.env.NODE_ENV === "development") {
-    fs.writeFileSync('./Log/log.txt');
+    fs.writeFileSync('./Log/log.txt',content);
   }
  next()
 })
