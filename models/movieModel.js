@@ -10,7 +10,7 @@ const movieSchema = mongoose.Schema({
   maxLength: [100, "Movie name cannot me more than 100 characters."],
   unique: true,
   trim: true,
-  /* validate: [validator.isAlpha, "Only alpha characters are mot supported"]*/
+  /* validate: [validator.isAlpha, "Only alpha characters are not supported"]*/
  },
  duration: {
   type: Number,
